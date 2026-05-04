@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book an Event – Eventra</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="event-index.html" class="nav-logo">Eventra</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="event-index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="book.html" class="active">Book Now</a></li>
+      <li><a href="admin-login.html">Admin</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── Booking Form ── -->
+<div class="form-page">
+  <div class="form-card" id="formCard">
+
+    <div class="form-header">
+      <h1>Reserve Your Spot 🎟️</h1>
+      <p>Fill in the details below to secure your booking. We'll confirm within 24 hours.</p>
+    </div>
+
+    <form id="bookingForm" novalidate>
+
+      <!-- Name & Email -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="name">Full Name <span>*</span></label>
+          <input type="text" id="name" class="form-control" placeholder="Anushka Sharma" autocomplete="name" />
+          <div class="form-error" id="nameError">Please enter your full name.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address <span>*</span></label>
+          <input type="email" id="email" class="form-control" placeholder="anushka@example.com" autocomplete="email" />
+          <div class="form-error" id="emailError">Please enter a valid email.</div>
+        </div>
+      </div>
+
+      <!-- Event dropdown -->
+      <div class="form-group">
+        <label class="form-label" for="event">Select Event <span>*</span></label>
+        <select id="event" class="form-control">
+          <option value="">— Choose an event —</option>
+          <!-- Populated by script.js -->
+        </select>
+        <div class="form-error" id="eventError">Please select an event.</div>
+      </div>
+
+      <!-- Date & Slot -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="date">Preferred Date <span>*</span></label>
+          <input type="date" id="date" class="form-control" />
+          <div class="form-error" id="dateError">Please pick a valid date.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="slot">Time Slot <span>*</span></label>
+          <select id="slot" class="form-control">
+            <option value="">— Choose a slot —</option>
+            <option value="Morning">🌅 Morning (9 AM – 12 PM)</option>
+            <option value="Evening">🌆 Evening (5 PM – 8 PM)</option>
+          </select>
+          <div class="form-error" id="slotError">Please select a time slot.</div>
+        </div>
+      </div>
+
+      <!-- Message -->
+      <div class="form-group">
+        <label class="form-label" for="message">Additional Message <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
+        <textarea id="message" class="form-control" placeholder="Any special requirements or notes…"></textarea>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%;justify-content:center;font-size:1rem">
+        Confirm Booking →
+      </button>
+
+    </form>
+  </div>
+</div>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <p><strong>Eventra</strong>. Crafted with love for memorable moments.</p>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script>
+  // Populate event dropdown from shared EVENTS list
+  const eventSelect = document.getElementById('event');
+  EVENTS.forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = e.name;
+    opt.textContent = e.name;
+    eventSelect.appendChild(opt);
+  });
+
+  // Pre-fill from URL param ?event=...
+  const params = new URLSearchParams(location.search);
+  if (params.get('event')) eventSelect.value = params.get('event');
+
+  // Set minimum date to today
+  document.getElementById('date').min = new Date().toISOString().split('T')[0];
+
+  // ── Form submission ──
+  document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name    = document.getElementById('name');
+    const email   = document.getElementById('email');
+    const event   = document.getElementById('event');
+    const date    = document.getElementById('date');
+    const slot    = document.getElementById('slot');
+    const message = document.getElementById('message');
+
+    // Validation helpers
+    const setError = (field, errId, show) => {
+      field.classList.toggle('error', show);
+      const el = document.getElementById(errId);
+      el.classList.toggle('show', show);
+    };
+
+    let valid = true;
+
+    if (!name.value.trim())            { setError(name,  'nameError',  true); valid = false; } else setError(name,  'nameError',  false);
+    if (!/\S+@\S+\.\S+/.test(email.value)) { setError(email, 'emailError', true); valid = false; } else setError(email, 'emailError', false);
+    if (!event.value)                  { setError(event, 'eventError', true); valid = false; } else setError(event, 'eventError', false);
+    if (!date.value)                   { setError(date,  'dateError',  true); valid = false; } else setError(date,  'dateError',  false);
+    if (!slot.value)                   { setError(slot,  'slotError',  true); valid = false; } else setError(slot,  'slotError',  false);
+
+    if (!valid) return;
+
+    // Show loading state
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;margin-right:8px"></span> Submitting…';
+
+    const payload = {
+      name:    name.value.trim(),
+      email:   email.value.trim(),
+      event:   event.value,
+      date:    date.value,
+      slot:    slot.value,
+      message: message.value.trim()
+    };
+
+    try {
+      const res  = await fetch(`${API_BASE}/add-booking`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || 'Booking failed');
+
+      // Show success state
+      document.getElementById('formCard').innerHTML = `
+        <div class="success-message">
+          <div class="success-icon">🎉</div>
+          <h3>You're all set!</h3>
+          <p>Your booking for <strong>${payload.event}</strong> on <strong>${formatDate(payload.date)}</strong> (${payload.slot}) has been received.</p>
+          <p style="margin-top:8px;color:var(--text-muted)">We'll send a confirmation to <strong>${payload.email}</strong> shortly.</p>
+          <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <a href="events.html" class="btn btn-outline">Browse More Events</a>
+            <a href="event-index.html" class="btn btn-primary">Back to Home</a>
+          </div>
+        </div>`;
+    } catch (err) {
+      showToast(err.message || 'Server not responding. Please try again.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = 'Confirm Booking →';
+    }
+  });
+</script>
+</body>
+</html>

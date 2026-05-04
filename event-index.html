@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eventra – Book Your Perfect Event</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="event-index.html" class="nav-logo">Eventra</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="event-index.html" class="active">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="book.html">Book Now</a></li>
+      <li><a href="admin-login.html">Admin</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-blob blob1"></div>
+  <div class="hero-blob blob2"></div>
+  <div class="hero-blob blob3"></div>
+  <div class="container hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Trusted by 10,000+ event-goers
+    </div>
+    <h1>Create <em>moments</em> that last forever</h1>
+    <p>Discover curated events, reserve your spot with ease, and experience unforgettable experiences—all in one beautiful place.</p>
+    <div class="hero-actions">
+      <a href="events.html" class="btn btn-primary">
+        🎉 View Events
+      </a>
+      <a href="book.html" class="btn btn-outline">
+        📝 Book a Slot
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ── -->
+<section class="section" style="background: var(--surface);">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Why Eventra</span>
+      <h2>Everything you need, beautifully simple</h2>
+      <p>From discovery to booking confirmation—we make it seamless.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card" style="animation-delay:.05s">
+        <div class="feature-icon" style="background:var(--purple-light)">🎭</div>
+        <h3>Curated Events</h3>
+        <p>Hand-picked experiences across music, art, wellness, and more. Every event is vetted for quality.</p>
+      </div>
+      <div class="feature-card" style="animation-delay:.1s">
+        <div class="feature-icon" style="background:var(--pink-light)">⚡</div>
+        <h3>Instant Booking</h3>
+        <p>Reserve your spot in seconds. No lengthy sign-ups, no waiting—just a clean, fast form.</p>
+      </div>
+      <div class="feature-card" style="animation-delay:.15s">
+        <div class="feature-icon" style="background:var(--blue-light)">📋</div>
+        <h3>Smart Scheduling</h3>
+        <p>Choose morning or evening slots that fit your lifestyle. We work around your calendar.</p>
+      </div>
+      <div class="feature-card" style="animation-delay:.2s">
+        <div class="feature-icon" style="background:var(--mint-light)">✅</div>
+        <h3>Live Status</h3>
+        <p>Track your booking status from Registered to Confirmed to Attended, all in real-time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Featured Events Preview ── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Featured</span>
+      <h2>Upcoming Events</h2>
+      <p>A glimpse of what's happening. Browse all events to find yours.</p>
+    </div>
+    <div class="events-grid" id="featuredEvents">
+      <!-- Rendered by JS below -->
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <a href="events.html" class="btn btn-primary">See All Events →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA Banner ── -->
+<section class="section" style="background:linear-gradient(135deg,#ede9fe,#fce7f3,#dbeafe)">
+  <div class="container" style="text-align:center;max-width:620px">
+    <span class="section-tag">Limited Spots</span>
+    <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);margin:12px 0">
+      Don't miss out on the <em style="color:var(--purple-dark);font-style:italic">experience</em>
+    </h2>
+    <p style="color:var(--text-muted);margin-bottom:32px">
+      Slots fill up fast. Secure your booking today and make it a date to remember.
+    </p>
+    <a href="book.html" class="btn btn-primary" style="font-size:1.05rem;padding:15px 36px">
+      Book Your Spot Now 🎟️
+    </a>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <p><strong>Eventra</strong>. Crafted with love for memorable moments. |
+    <a href="admin-login.html">Admin Portal</a>
+  </p>
+</footer>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="script.js"></script>
+<script>
+  // Render 3 featured events on home page
+  const featuredEvents = EVENTS.slice(0, 3);
+  document.getElementById('featuredEvents').innerHTML = featuredEvents
+    .map((e, i) => renderEventCard(e, i)).join('');
+</script>
+</body>
+</html>

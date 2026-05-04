@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events – Eventra</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="event-index.html" class="nav-logo">Eventra</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="event-index.html">Home</a></li>
+      <li><a href="events.html" class="active">Events</a></li>
+      <li><a href="book.html">Book Now</a></li>
+      <li><a href="admin-login.html">Admin</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── Page Header ── -->
+<div style="background:linear-gradient(135deg,#f0e7ff,#fce7f3,#dbeafe);padding:60px 24px 48px;text-align:center">
+  <span class="section-tag">Discover & Book</span>
+  <h1 style="font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3.2rem);margin:14px 0 12px">
+    All Upcoming Events
+  </h1>
+  <p style="color:var(--text-muted);font-size:1.05rem;max-width:480px;margin:0 auto">
+    Browse our curated selection of experiences and find the perfect fit for you.
+  </p>
+</div>
+
+<!-- ── Events Grid ── -->
+<section class="section">
+  <div class="container">
+    <div class="events-grid" id="eventsGrid"></div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <p> <strong>Eventra</strong>. Crafted with love for memorable moments. |
+    <a href="admin-login.html">Admin Portal</a>
+  </p>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script>
+  // Render all events
+  document.getElementById('eventsGrid').innerHTML = EVENTS
+    .map((e, i) => renderEventCard(e, i)).join('');
+</script>
+</body>
+</html>
